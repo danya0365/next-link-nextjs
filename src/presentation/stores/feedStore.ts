@@ -15,7 +15,10 @@ interface FeedState {
 interface FeedActions {
   loadPosts: () => Promise<void>;
   addPost: (post: Omit<Post, "id" | "createdAt" | "reactions" | "totalReactions" | "comments" | "totalComments" | "shares">) => void;
+  updatePost: (postId: string, updates: Partial<Pick<Post, "content" | "privacy" | "feeling" | "location">>) => void;
   deletePost: (postId: string) => void;
+  hidePost: (postId: string) => void;
+  savePost: (postId: string) => void;
   reactToPost: (postId: string, reactionType: PostReaction["type"]) => void;
   addComment: (postId: string, comment: Omit<PostComment, "id" | "createdAt" | "likes">) => void;
   deleteComment: (postId: string, commentId: string) => void;
@@ -76,11 +79,34 @@ export const useFeedStore = create<FeedStore>((set, get) => ({
     });
   },
 
+  updatePost: (postId, updates) => {
+    const { posts } = get();
+    set({
+      posts: posts.map((post) =>
+        post.id === postId ? { ...post, ...updates } : post
+      ),
+    });
+  },
+
   deletePost: (postId) => {
     const { posts } = get();
     set({
       posts: posts.filter((post) => post.id !== postId),
     });
+  },
+
+  hidePost: (postId) => {
+    const { posts } = get();
+    // In a real app, this would mark the post as hidden for the user
+    set({
+      posts: posts.filter((post) => post.id !== postId),
+    });
+  },
+
+  savePost: (postId) => {
+    // In a real app, this would add the post to user's saved posts
+    console.log("Post saved:", postId);
+    alert("บันทึกโพสต์แล้ว!");
   },
 
   reactToPost: (postId, reactionType) => {

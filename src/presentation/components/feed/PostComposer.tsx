@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Image as ImageIcon, Video, Smile, MapPin, X } from "lucide-react";
 import { useAuthStore } from "@/src/presentation/stores/authStore";
 import { useFeedStore } from "@/src/presentation/stores/feedStore";
+import { FeelingActivityPicker } from "./FeelingActivityPicker";
+import { FeelingActivity } from "@/src/data/feelings-activities";
 
 /**
  * Post Composer Component
@@ -19,6 +21,7 @@ export function PostComposer() {
   const [privacy, setPrivacy] = useState<"public" | "friends" | "only_me">("public");
   const [feeling, setFeeling] = useState("");
   const [location, setLocation] = useState("");
+  const [showFeelingPicker, setShowFeelingPicker] = useState(false);
 
   const handleSubmit = () => {
     if (!content.trim() || !user) return;
@@ -40,10 +43,15 @@ export function PostComposer() {
     setIsExpanded(false);
   };
 
+  const handleFeelingSelect = (item: FeelingActivity) => {
+    setFeeling(item.emoji + " " + item.label);
+  };
+
   if (!user) return null;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-4">
+    <>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-4">
       {/* Header */}
       <div className="flex items-center space-x-3 mb-4">
         <Image
@@ -115,7 +123,7 @@ export function PostComposer() {
                 <Video className="w-5 h-5" />
               </button>
               <button
-                onClick={() => setFeeling("มีความสุข")}
+                onClick={() => setShowFeelingPicker(true)}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-yellow-600"
               >
                 <Smile className="w-5 h-5" />
@@ -189,6 +197,14 @@ export function PostComposer() {
           </button>
         </div>
       )}
-    </div>
+      </div>
+
+      {/* Feeling/Activity Picker Modal */}
+      <FeelingActivityPicker
+        isOpen={showFeelingPicker}
+        onClose={() => setShowFeelingPicker(false)}
+        onSelect={handleFeelingSelect}
+      />
+    </>
   );
 }

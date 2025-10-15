@@ -10,7 +10,6 @@ import {
   Angry,
   MessageCircle,
   Share2,
-  MoreHorizontal,
   MapPin,
   Globe,
   Users,
@@ -20,6 +19,7 @@ import { Post, PostReaction } from "@/src/data/mock-posts";
 import { useFeedStore } from "@/src/presentation/stores/feedStore";
 import { useAuthStore } from "@/src/presentation/stores/authStore";
 import { formatDistanceToNow } from "@/src/utils/date-helpers";
+import { PostActionsMenu } from "./PostActionsMenu";
 
 interface PostCardProps {
   post: Post;
@@ -46,10 +46,11 @@ const privacyIcons = {
  */
 export function PostCard({ post }: PostCardProps) {
   const { user } = useAuthStore();
-  const { reactToPost, addComment, sharePost } = useFeedStore();
+  const { reactToPost, addComment, sharePost, deletePost, hidePost, savePost } = useFeedStore();
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [showReactionPicker, setShowReactionPicker] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const userReaction = post.reactions.find((r) => r.userReacted);
 
@@ -118,9 +119,23 @@ export function PostCard({ post }: PostCardProps) {
               </div>
             </div>
           </div>
-          <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
-            <MoreHorizontal className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-          </button>
+          <PostActionsMenu
+            postId={post.id}
+            postUserId={post.userId}
+            onEdit={() => setIsEditing(true)}
+            onDelete={() => {
+              if (confirm("คุณต้องการลบโพสต์นี้หรือไม่?")) {
+                deletePost(post.id);
+              }
+            }}
+            onSave={() => savePost(post.id)}
+            onHide={() => {
+              if (confirm("คุณต้องการซ่อนโพสต์นี้หรือไม่?")) {
+                hidePost(post.id);
+              }
+            }}
+            onReport={() => alert("รายงานโพสต์")}
+          />
         </div>
 
         {/* Post Content */}
