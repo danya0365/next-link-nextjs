@@ -164,8 +164,9 @@ export function Header() {
                 {isProfileMenuOpen && (
                   <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2">
                     <Link
-                      href="/profile"
+                      href={`/profile/${user?.id || ""}`}
                       className="flex items-center space-x-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+                      onClick={() => setIsProfileMenuOpen(false)}
                     >
                       <UserCircle className="w-5 h-5" />
                       <span>โปรไฟล์</span>
@@ -271,7 +272,7 @@ export function Header() {
                   <span>การแจ้งเตือน</span>
                 </Link>
                 <Link
-                  href="/profile"
+                  href={`/profile/${user?.id || ""}`}
                   className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
                   onClick={toggleMobileMenu}
                 >
