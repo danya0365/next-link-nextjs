@@ -7,17 +7,22 @@ import { PostCard } from "./PostCard";
 import { Stories } from "./Stories";
 import { LeftSidebar } from "./LeftSidebar";
 import { RightSidebar } from "./RightSidebar";
-import { useFeedStore } from "@/src/presentation/stores/feedStore";
 import { useAuthStore } from "@/src/presentation/stores/authStore";
+import { useFeedPresenter } from "@/src/presentation/presenters/feed/useFeedPresenter";
+import { FeedViewModel } from "@/src/presentation/presenters/feed/FeedPresenter";
+
+interface FeedViewProps {
+  initialViewModel?: FeedViewModel;
+}
 
 /**
  * Feed View Component
  * หน้า News Feed หลัก
  */
-export function FeedView() {
+export function FeedView({ initialViewModel }: FeedViewProps) {
   const router = useRouter();
-  const { isAuthenticated, user } = useAuthStore();
-  const { posts, isLoading, error, loadPosts } = useFeedStore();
+  const { isAuthenticated } = useAuthStore();
+  const [state, actions] = useFeedPresenter(initialViewModel);
 
   useEffect(() => {
     // Redirect to login if not authenticated
@@ -25,15 +30,10 @@ export function FeedView() {
       router.push("/login");
       return;
     }
-
-    // Load posts on mount
-    if (posts.length === 0) {
-      loadPosts();
-    }
-  }, [isAuthenticated, router, loadPosts, posts.length]);
+  }, [isAuthenticated, router]);
 
   // Loading state
-  if (isLoading && posts.length === 0) {
+  if (state.loading && !state.viewModel) {
     return (
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
@@ -45,7 +45,7 @@ export function FeedView() {
   }
 
   // Error state
-  if (error) {
+  if (state.error) {
     return (
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
@@ -53,9 +53,9 @@ export function FeedView() {
           <p className="text-red-600 dark:text-red-400 font-medium mb-2">
             เกิดข้อผิดพลาด
           </p>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{state.error}</p>
           <button
-            onClick={loadPosts}
+            onClick={actions.refreshPosts}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
           >
             ลองใหม่อีกครั้ง
@@ -64,6 +64,9 @@ export function FeedView() {
       </div>
     );
   }
+
+  // Get posts from viewModel
+  const posts = state.viewModel?.posts || [];
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
