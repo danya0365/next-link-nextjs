@@ -4,6 +4,9 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PostComposer } from "./PostComposer";
 import { PostCard } from "./PostCard";
+import { Stories } from "./Stories";
+import { LeftSidebar } from "./LeftSidebar";
+import { RightSidebar } from "./RightSidebar";
 import { useFeedStore } from "@/src/presentation/stores/feedStore";
 import { useAuthStore } from "@/src/presentation/stores/authStore";
 
@@ -64,63 +67,48 @@ export function FeedView() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
-      <div className="max-w-2xl mx-auto px-4 py-6 space-y-4">
-        {/* Welcome Message */}
-        {user && (
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-md p-6 text-white">
-            <h1 className="text-2xl font-bold mb-2">
-              สวัสดี, {user.name.split(" ")[0]}! 👋
-            </h1>
-            <p className="text-blue-100">
-              มีอะไรน่าสนใจเกิดขึ้นวันนี้บ้าง?
-            </p>
+      {/* Left Sidebar */}
+      <LeftSidebar />
+
+      {/* Main Content */}
+      <div className="lg:ml-64 xl:ml-72 xl:mr-80">
+        <div className="max-w-2xl mx-auto px-4 py-6 space-y-4">
+          {/* Stories */}
+          <Stories />
+
+          {/* Post Composer */}
+          <PostComposer />
+
+          {/* Posts Feed */}
+          <div className="space-y-4">
+            {posts.length === 0 ? (
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-12 text-center">
+                <div className="text-6xl mb-4">📝</div>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  ยังไม่มีโพสต์
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  เริ่มต้นโพสต์อะไรสักอย่างเพื่อแชร์กับเพื่อนๆ
+                </p>
+              </div>
+            ) : (
+              posts.map((post) => <PostCard key={post.id} post={post} />)
+            )}
           </div>
-        )}
 
-        {/* Post Composer */}
-        <PostComposer />
-
-        {/* Filter Tabs */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-2">
-          <div className="flex space-x-2">
-            <button className="flex-1 py-2 px-4 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg font-medium">
-              📰 โพสต์ทั้งหมด
-            </button>
-            <button className="flex-1 py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-lg font-medium transition-colors">
-              👥 เพื่อน
-            </button>
-            <button className="flex-1 py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-lg font-medium transition-colors">
-              📄 เพจ
-            </button>
-          </div>
-        </div>
-
-        {/* Posts Feed */}
-        <div className="space-y-4">
-          {posts.length === 0 ? (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 p-12 text-center">
-              <div className="text-6xl mb-4">📝</div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                ยังไม่มีโพสต์
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                เริ่มต้นโพสต์อะไรสักอย่างเพื่อแชร์กับเพื่อนๆ
-              </p>
+          {/* Load More */}
+          {posts.length > 0 && (
+            <div className="text-center py-4">
+              <button className="px-6 py-3 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg font-medium transition-colors">
+                โหลดโพสต์เพิ่มเติม
+              </button>
             </div>
-          ) : (
-            posts.map((post) => <PostCard key={post.id} post={post} />)
           )}
         </div>
-
-        {/* Load More */}
-        {posts.length > 0 && (
-          <div className="text-center py-4">
-            <button className="px-6 py-3 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg font-medium transition-colors">
-              โหลดโพสต์เพิ่มเติม
-            </button>
-          </div>
-        )}
       </div>
+
+      {/* Right Sidebar */}
+      <RightSidebar />
     </div>
   );
 }

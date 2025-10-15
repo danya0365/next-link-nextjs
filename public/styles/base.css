@@ -1,21 +1,40 @@
 @layer base {
-  :root {
-    /* UI Theme */
-    --card-bg: rgba(255, 255, 255, 0.8);
-    --card-border: rgba(0, 0, 0, 0.1);
-    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05),
-      0 10px 15px rgba(0, 0, 0, 0.03);
+  /* Base styles */
 
-    /* Hero background colors - Orange Theme */
-    --color-hero-primary: #f97316;
-    --color-hero-secondary: #ea580c;
-    --color-hero-accent: #fb923c;
-    --color-hero-light: #fed7aa;
-    --color-hero-warm: #ffedd5;
+  /* Custom Scrollbar */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
 
-    /* Hero pattern and effects */
-    --hero-pattern-opacity: 0.1;
-    --hero-glow-color: rgba(249, 115, 22, 0.3);
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #4a5568;
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #718096;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 
   body {
