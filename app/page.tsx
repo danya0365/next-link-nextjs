@@ -1,7 +1,10 @@
+import { MainLayout } from "@/src/presentation/components/layouts/MainLayout";
+import { LandingView } from "@/src/presentation/components/landing/LandingView";
+
 export default function Home() {
   return (
-    <div>
-      <h1>Home</h1>
-    </div>
+    <MainLayout>
+      <LandingView />
+    </MainLayout>
   );
 }

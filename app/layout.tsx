@@ -3,24 +3,30 @@ import type { Metadata } from "next";
 import "../public/styles/index.css";
 
 export const metadata: Metadata = {
-  title: "Work Pulse - ระบบบันทึกการเข้างานและลาของพนักงาน",
+  title: "Next Link - โซเชียลมีเดียเชื่อมต่อคนทั่วโลก",
   description:
-    "ระบบบันทึกการเข้างานและการลาที่ทันสมัย ใช้งานง่าย ช่วยให้คุณและทีมมีความสุขในการทำงานมากขึ้น เริ่มใช้งานฟรี",
+    "แพลตฟอร์มโซเชียลมีเดียที่ทันสมัย เชื่อมต่อกับเพื่อน ครอบครัว และคนที่คุณรัก แชร์ช่วงเวลาสำคัญ สร้างความทรงจำร่วมกัน และค้นพบสิ่งใหม่ๆ ทุกวัน",
   keywords: [
-    "ระบบบันทึกการเข้างาน",
-    "ระบบลา",
-    "attendance system",
-    "leave management",
-    "HR system",
-    "work tracking",
-    "employee management",
-    "Work Pulse",
-    "การจัดการพนักงาน",
-    "ระบบ HR",
+    "social media",
+    "โซเชียลมีเดีย",
+    "social network",
+    "connect",
+    "friends",
+    "sharing",
+    "community",
+    "Next Link",
+    "เชื่อมต่อ",
+    "แชร์",
+    "เพื่อน",
+    "คอมมูนิตี้",
+    "แชร์รูปภาพ",
+    "วิดีโอ",
+    "messenger",
+    "chat",
   ],
-  authors: [{ name: "Work Pulse Team" }],
+  authors: [{ name: "Next Link Team" }],
   creator: "Marosdee Uma",
-  publisher: "Work Pulse",
+  publisher: "Next Link",
   robots: {
     index: true,
     follow: true,
@@ -54,20 +60,27 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
   openGraph: {
-    title: "Work Pulse - ระบบบันทึกการเข้างานและลาของพนักงาน",
+    title: "Next Link - โซเชียลมีเดียเชื่อมต่อคนทั่วโลก",
     description:
-      "ระบบบันทึกการเข้างานและการลาที่ทันสมัย ใช้งานง่าย เริ่มใช้งานฟรี",
+      "แพลตฟอร์มโซเชียลมีเดียที่ทันสมัย เชื่อมต่อกับเพื่อน ครอบครัว และคนที่คุณรัก แชร์ช่วงเวลาสำคัญและค้นพบสิ่งใหม่ๆ",
     type: "website",
-    siteName: "Work Pulse",
+    siteName: "Next Link",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Work Pulse - Attendance and Leave Management System",
+        alt: "Next Link - Social Media Platform",
       },
     ],
     locale: "th_TH",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Next Link - โซเชียลมีเดียเชื่อมต่อคนทั่วโลก",
+    description:
+      "แพลตฟอร์มโซเชียลมีเดียที่ทันสมัย เชื่อมต่อกับเพื่อน ครอบครัว และคนที่คุณรัก",
+    images: ["/og-image.png"],
   },
 };
 
