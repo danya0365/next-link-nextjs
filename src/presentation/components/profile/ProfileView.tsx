@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -15,33 +14,58 @@ import {
   Cake,
   Mail,
 } from "lucide-react";
-import { useAuthStore } from "@/src/presentation/stores/authStore";
-import { useFeedStore } from "@/src/presentation/stores/feedStore";
-import { mockUsers } from "@/src/data/mock-users";
-import { mockAboutData, mockPhotosData, mockFriendsData } from "@/src/data/mock-profile-data";
+import { ProfileViewModel } from "@/src/presentation/presenters/profile/ProfilePresenter";
+import { useProfilePresenter } from "@/src/presentation/presenters/profile/useProfilePresenter";
 import { PostCard } from "../feed/PostCard";
 
 interface ProfileViewProps {
   userId: string;
+  initialViewModel?: ProfileViewModel;
 }
 
 /**
  * Profile View Component
  * หน้าโปรไฟล์ผู้ใช้
  */
-export function ProfileView({ userId }: ProfileViewProps) {
-  const { user: currentUser } = useAuthStore();
-  const { posts } = useFeedStore();
-  const [activeTab, setActiveTab] = useState<"posts" | "about" | "photos" | "friends">("posts");
+export function ProfileView({ userId, initialViewModel }: ProfileViewProps) {
+  const [state, actions] = useProfilePresenter(userId, initialViewModel);
+  const viewModel = state.viewModel;
 
-  const profileUser = mockUsers.find((u) => u.id === userId);
-  const isOwnProfile = currentUser?.id === userId;
-  const aboutData = mockAboutData[userId] || {};
-  const photos = mockPhotosData[userId] || [];
-  const friends = mockFriendsData[userId] || [];
-  const userPosts = posts.filter((post) => post.userId === userId);
+  // Loading state
+  if (state.loading && !viewModel) {
+    return (
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">กำลังโหลดโปรไฟล์...</p>
+        </div>
+      </div>
+    );
+  }
 
-  if (!profileUser) {
+  // Error state
+  if (state.error && !viewModel) {
+    return (
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 text-6xl mb-4">⚠️</div>
+          <p className="text-red-600 dark:text-red-400 font-medium mb-2">
+            เกิดข้อผิดพลาด
+          </p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{state.error}</p>
+          <button
+            onClick={actions.loadData}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+          >
+            ลองใหม่อีกครั้ง
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Not found state
+  if (!viewModel || !viewModel.profileUser) {
     return (
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
@@ -52,6 +76,8 @@ export function ProfileView({ userId }: ProfileViewProps) {
       </div>
     );
   }
+
+  const { profileUser, isOwnProfile, aboutData, photos, friends, userPosts } = viewModel;
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 pb-8">
@@ -145,9 +171,9 @@ export function ProfileView({ userId }: ProfileViewProps) {
           {/* Tabs */}
           <div className="border-t border-gray-200 dark:border-gray-700 flex space-x-6">
             <button
-              onClick={() => setActiveTab("posts")}
+              onClick={() => actions.setActiveTab("posts")}
               className={`py-4 px-2 border-b-2 font-medium transition-colors ${
-                activeTab === "posts"
+                state.activeTab === "posts"
                   ? "border-blue-600 text-blue-600"
                   : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
               }`}
@@ -155,9 +181,9 @@ export function ProfileView({ userId }: ProfileViewProps) {
               โพสต์
             </button>
             <button
-              onClick={() => setActiveTab("about")}
+              onClick={() => actions.setActiveTab("about")}
               className={`py-4 px-2 border-b-2 font-medium transition-colors ${
-                activeTab === "about"
+                state.activeTab === "about"
                   ? "border-blue-600 text-blue-600"
                   : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
               }`}
@@ -165,9 +191,9 @@ export function ProfileView({ userId }: ProfileViewProps) {
               เกี่ยวกับ
             </button>
             <button
-              onClick={() => setActiveTab("photos")}
+              onClick={() => actions.setActiveTab("photos")}
               className={`py-4 px-2 border-b-2 font-medium transition-colors ${
-                activeTab === "photos"
+                state.activeTab === "photos"
                   ? "border-blue-600 text-blue-600"
                   : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
               }`}
@@ -175,9 +201,9 @@ export function ProfileView({ userId }: ProfileViewProps) {
               รูปภาพ
             </button>
             <button
-              onClick={() => setActiveTab("friends")}
+              onClick={() => actions.setActiveTab("friends")}
               className={`py-4 px-2 border-b-2 font-medium transition-colors ${
-                activeTab === "friends"
+                state.activeTab === "friends"
                   ? "border-blue-600 text-blue-600"
                   : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
               }`}
@@ -306,7 +332,7 @@ export function ProfileView({ userId }: ProfileViewProps) {
 
           {/* Main Content */}
           <div className="lg:col-span-2">
-            {activeTab === "posts" && (
+            {state.activeTab === "posts" && (
               <div className="space-y-4">
                 {userPosts.length === 0 ? (
                   <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-12 text-center">
@@ -320,7 +346,7 @@ export function ProfileView({ userId }: ProfileViewProps) {
               </div>
             )}
 
-            {activeTab === "about" && (
+            {state.activeTab === "about" && (
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 space-y-6">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                   เกี่ยวกับ
@@ -448,7 +474,7 @@ export function ProfileView({ userId }: ProfileViewProps) {
               </div>
             )}
 
-            {activeTab === "photos" && (
+            {state.activeTab === "photos" && (
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                   รูปภาพ
@@ -474,7 +500,7 @@ export function ProfileView({ userId }: ProfileViewProps) {
               </div>
             )}
 
-            {activeTab === "friends" && (
+            {state.activeTab === "friends" && (
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                   เพื่อน
