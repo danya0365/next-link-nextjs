@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import {
   Home,
@@ -18,24 +19,20 @@ import {
   LogOut,
 } from "lucide-react";
 import { cn } from "@/src/utils/cn";
+import { useAuthStore } from "@/src/presentation/stores/authStore";
 
 /**
  * Header Component
  * แถบเมนูด้านบนพร้อมการนำทาง Theme Toggle และฟีเจอร์ต่างๆ
  */
-interface User {
-  name: string;
-  avatar?: string;
-}
-
 export function Header() {
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
-
-  // Mock user state (จะถูกแทนที่ด้วย Zustand store ภายหลัง)
-  const isAuthenticated = false;
-  const user: User | null = null;
+  
+  // Auth state from Zustand store
+  const { user, isAuthenticated, logout } = useAuthStore();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -47,6 +44,12 @@ export function Header() {
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
+  };
+
+  const handleLogout = () => {
+    logout();
+    setIsProfileMenuOpen(false);
+    router.push("/");
   };
 
   return (
@@ -153,7 +156,7 @@ export function Header() {
                     <UserCircle className="w-5 h-5 text-white" />
                   </div>
                   <span className="hidden sm:block text-gray-900 dark:text-white font-medium">
-                    {(user as User | null)?.name || "ผู้ใช้"}
+                    {user?.name || "ผู้ใช้"}
                   </span>
                 </button>
 
@@ -175,7 +178,10 @@ export function Header() {
                       <span>ตั้งค่า</span>
                     </Link>
                     <hr className="my-2 border-gray-200 dark:border-gray-700" />
-                    <button className="flex items-center space-x-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 w-full">
+                    <button 
+                      onClick={handleLogout}
+                      className="flex items-center space-x-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 w-full"
+                    >
                       <LogOut className="w-5 h-5" />
                       <span>ออกจากระบบ</span>
                     </button>
@@ -281,7 +287,10 @@ export function Header() {
                   <span>ตั้งค่า</span>
                 </Link>
                 <hr className="my-2 border-gray-200 dark:border-gray-700" />
-                <button className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 w-full">
+                <button 
+                  onClick={handleLogout}
+                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 w-full"
+                >
                   <LogOut className="w-6 h-6" />
                   <span>ออกจากระบบ</span>
                 </button>
