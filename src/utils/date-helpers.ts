@@ -97,3 +97,69 @@ export function isYesterday(date: string | Date): boolean {
     d.getFullYear() === yesterday.getFullYear()
   );
 }
+
+/**
+ * Format event date range
+ * แสดงช่วงเวลาของอีเว้นท์
+ */
+export function formatEventDate(startDate: string | Date, endDate: string | Date): string {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  
+  const isSameDay = 
+    start.getDate() === end.getDate() &&
+    start.getMonth() === end.getMonth() &&
+    start.getFullYear() === end.getFullYear();
+  
+  if (isSameDay) {
+    const dateStr = new Intl.DateTimeFormat("th-TH", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }).format(start);
+    
+    const startTime = new Intl.DateTimeFormat("th-TH", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(start);
+    
+    const endTime = new Intl.DateTimeFormat("th-TH", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(end);
+    
+    return `${dateStr} • ${startTime} - ${endTime}`;
+  }
+  
+  const startStr = new Intl.DateTimeFormat("th-TH", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(start);
+  
+  const endStr = new Intl.DateTimeFormat("th-TH", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(end);
+  
+  return `${startStr} - ${endStr}`;
+}
+
+/**
+ * Format short date with time
+ * แสดงวันที่และเวลาแบบสั้น
+ */
+export function formatShortDateTime(date: string | Date): string {
+  const d = new Date(date);
+  return new Intl.DateTimeFormat("th-TH", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(d);
+}
