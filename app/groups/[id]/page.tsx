@@ -1,17 +1,18 @@
-import { MainLayout } from "@/src/presentation/components/layouts/MainLayout";
-import { GroupDetailView } from "@/src/presentation/components/groups/GroupDetailView";
 import { mockGroups } from "@/src/data/groups-mock-data";
-import { notFound } from "next/navigation";
+import { GroupDetailView } from "@/src/presentation/components/groups/GroupDetailView";
+import { MainLayout } from "@/src/presentation/components/layouts/MainLayout";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 interface GroupPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function generateMetadata({
   params,
 }: GroupPageProps): Promise<Metadata> {
-  const group = mockGroups.find((g) => g.id === params.id);
+  const { id } = await params;
+  const group = mockGroups.find((g) => g.id === id);
 
   if (!group) {
     return {
@@ -25,8 +26,9 @@ export async function generateMetadata({
   };
 }
 
-export default function GroupPage({ params }: GroupPageProps) {
-  const group = mockGroups.find((g) => g.id === params.id);
+export default async function GroupPage({ params }: GroupPageProps) {
+  const { id } = await params;
+  const group = mockGroups.find((g) => g.id === id);
 
   if (!group) {
     notFound();

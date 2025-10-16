@@ -5,13 +5,14 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 interface PostPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function generateMetadata({
   params,
 }: PostPageProps): Promise<Metadata> {
-  const post = mockPosts.find((p) => p.id === params.id);
+  const { id } = await params;
+  const post = mockPosts.find((p) => p.id === id);
 
   if (!post) {
     return {
@@ -25,8 +26,9 @@ export async function generateMetadata({
   };
 }
 
-export default function PostPage({ params }: PostPageProps) {
-  const post = mockPosts.find((p) => p.id === params.id);
+export default async function PostPage({ params }: PostPageProps) {
+  const { id } = await params;
+  const post = mockPosts.find((p) => p.id === id);
 
   if (!post) {
     notFound();
