@@ -54,10 +54,16 @@ export function WatchView({ initialViewModel }: WatchViewProps) {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Header with Search */}
+      {/* Header */}
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <Play className="w-6 h-6" />
+              วิดีโอ
+            </h1>
+          </div>
+          <form onSubmit={handleSearch} className="max-w-2xl">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
@@ -96,47 +102,57 @@ export function WatchView({ initialViewModel }: WatchViewProps) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Featured Video */}
-        {state.viewModel?.featuredVideo && state.selectedCategory === "all" && !state.searchQuery && (
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              🔥 วิดีโอแนะนำ
-            </h2>
-            <div
-              className="relative group cursor-pointer rounded-2xl overflow-hidden shadow-xl"
-              onClick={() => actions.selectVideo(state.viewModel!.featuredVideo!)}
-            >
-              <div className="relative aspect-video">
-                <Image
-                  src={state.viewModel.featuredVideo.thumbnail}
-                  alt={state.viewModel.featuredVideo.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center">
-                    <Play className="w-10 h-10 text-white ml-1" fill="currentColor" />
-                  </div>
-                </div>
-                <div className="absolute bottom-4 left-4 right-4">
-                  <h3 className="text-2xl font-bold text-white mb-2">
-                    {state.viewModel.featuredVideo.title}
-                  </h3>
-                  <div className="flex items-center gap-4 text-white/90 text-sm">
-                    <div className="flex items-center gap-1">
-                      <Eye className="w-4 h-4" />
-                      <span>{formatNumber(state.viewModel.featuredVideo.views)} ครั้ง</span>
+        {state.viewModel?.featuredVideo &&
+          state.selectedCategory === "all" &&
+          !state.searchQuery && (
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                🔥 วิดีโอแนะนำ
+              </h2>
+              <div
+                className="relative group cursor-pointer rounded-2xl overflow-hidden shadow-xl"
+                onClick={() =>
+                  actions.selectVideo(state.viewModel!.featuredVideo!)
+                }
+              >
+                <div className="relative aspect-video">
+                  <Image
+                    src={state.viewModel.featuredVideo.thumbnail}
+                    alt={state.viewModel.featuredVideo.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center">
+                      <Play
+                        className="w-10 h-10 text-white ml-1"
+                        fill="currentColor"
+                      />
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      <span>{state.viewModel.featuredVideo.duration}</span>
+                  </div>
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <h3 className="text-2xl font-bold text-white mb-2">
+                      {state.viewModel.featuredVideo.title}
+                    </h3>
+                    <div className="flex items-center gap-4 text-white/90 text-sm">
+                      <div className="flex items-center gap-1">
+                        <Eye className="w-4 h-4" />
+                        <span>
+                          {formatNumber(state.viewModel.featuredVideo.views)}{" "}
+                          ครั้ง
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        <span>{state.viewModel.featuredVideo.duration}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
         {/* Videos Grid */}
         <div className="mb-6 flex items-center justify-between">
@@ -145,7 +161,11 @@ export function WatchView({ initialViewModel }: WatchViewProps) {
               ? `ผลการค้นหา "${state.searchQuery}"`
               : state.selectedCategory === "all"
               ? "วิดีโอทั้งหมด"
-              : `${state.viewModel?.categories.find((c) => c.id === state.selectedCategory)?.name || ""}`}
+              : `${
+                  state.viewModel?.categories.find(
+                    (c) => c.id === state.selectedCategory
+                  )?.name || ""
+                }`}
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {state.filteredVideos.length} วิดีโอ
@@ -191,7 +211,10 @@ export function WatchView({ initialViewModel }: WatchViewProps) {
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
-                        <Play className="w-6 h-6 text-white ml-0.5" fill="currentColor" />
+                        <Play
+                          className="w-6 h-6 text-white ml-0.5"
+                          fill="currentColor"
+                        />
                       </div>
                     </div>
                     <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-1 rounded text-white text-xs font-medium">
@@ -258,7 +281,10 @@ export function WatchView({ initialViewModel }: WatchViewProps) {
               />
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 transition-colors">
-                  <Play className="w-10 h-10 text-white ml-1" fill="currentColor" />
+                  <Play
+                    className="w-10 h-10 text-white ml-1"
+                    fill="currentColor"
+                  />
                 </div>
               </div>
             </div>
@@ -295,7 +321,9 @@ export function WatchView({ initialViewModel }: WatchViewProps) {
                 <div className="flex items-center gap-2">
                   <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full transition-colors">
                     <ThumbsUp className="w-5 h-5" />
-                    <span className="font-medium">{formatNumber(state.selectedVideo.likes)}</span>
+                    <span className="font-medium">
+                      {formatNumber(state.selectedVideo.likes)}
+                    </span>
                   </button>
                   <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full transition-colors">
                     <ThumbsDown className="w-5 h-5" />
