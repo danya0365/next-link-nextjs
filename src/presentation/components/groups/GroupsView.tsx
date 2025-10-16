@@ -6,15 +6,15 @@ import { useAuthStore } from "@/src/presentation/stores/authStore";
 import { formatDistanceToNow } from "@/src/utils/date-helpers";
 import { formatNumber } from "@/src/utils/text-helpers";
 import {
+  Check,
   Clock,
   Globe,
   Lock,
+  MessageCircle,
   Search,
   UserPlus,
   Users,
   X,
-  Check,
-  MessageCircle,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -77,7 +77,13 @@ export function GroupsView({ initialViewModel }: GroupsViewProps) {
       {/* Header with Search */}
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <Users className="w-6 h-6" />
+              กลุ่มและชุมชน
+            </h1>
+          </div>
+          <form onSubmit={handleSearch} className="max-w-2xl">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
@@ -358,7 +364,10 @@ export function GroupsView({ initialViewModel }: GroupsViewProps) {
                 </h2>
                 <div className="flex items-center gap-2 text-white/90">
                   {getPrivacyIcon(state.selectedGroup.privacy)}
-                  <span>{getPrivacyLabel(state.selectedGroup.privacy)} • {formatNumber(state.selectedGroup.members)} สมาชิก</span>
+                  <span>
+                    {getPrivacyLabel(state.selectedGroup.privacy)} •{" "}
+                    {formatNumber(state.selectedGroup.members)} สมาชิก
+                  </span>
                 </div>
               </div>
             </div>
@@ -456,7 +465,9 @@ export function GroupsView({ initialViewModel }: GroupsViewProps) {
                       ดูกลุ่ม
                     </button>
                     <button
-                      onClick={() => actions.leaveGroup(state.selectedGroup!.id)}
+                      onClick={() =>
+                        actions.leaveGroup(state.selectedGroup!.id)
+                      }
                       className="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors font-medium"
                     >
                       ออกจากกลุ่ม
