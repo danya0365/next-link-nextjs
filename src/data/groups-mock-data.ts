@@ -3,6 +3,20 @@
  * ข้อมูล Mock สำหรับหน้า Groups
  */
 
+export interface GroupPost {
+  id: string;
+  groupId: string;
+  userId: string;
+  userName: string;
+  userAvatar: string;
+  content: string;
+  images?: string[];
+  createdAt: string;
+  likes: number;
+  comments: number;
+  shares: number;
+}
+
 export interface Group {
   id: string;
   name: string;
@@ -22,6 +36,7 @@ export interface Group {
   isMember: boolean;
   isPending: boolean;
   tags: string[];
+  posts?: GroupPost[];
 }
 
 export const groupCategories = [
@@ -330,3 +345,77 @@ export const mockGroups: Group[] = [
     tags: ["pets", "dogs", "cats", "animals"],
   },
 ];
+
+// Mock group posts
+export const mockGroupPosts: GroupPost[] = [
+  {
+    id: "gp-1",
+    groupId: "1",
+    userId: "u1",
+    userName: "สมชาย ท่องโลก",
+    userAvatar: "https://i.pravatar.cc/150?u=user1",
+    content: "เมื่อวานไปเที่ยวภูเก็ตมา ทะเลสวยมากๆ น้ำใส อากาศดี แนะนำเลยครับ!",
+    images: [
+      "https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?w=800",
+      "https://images.unsplash.com/photo-1552751753-d6e1be5f8f82?w=800",
+    ],
+    createdAt: "2024-01-18T10:30:00",
+    likes: 234,
+    comments: 45,
+    shares: 12,
+  },
+  {
+    id: "gp-2",
+    groupId: "1",
+    userId: "u2",
+    userName: "วรรณา รักเที่ยว",
+    userAvatar: "https://i.pravatar.cc/150?u=user2",
+    content: "ใครมีเคล็ดลับการจองที่พักราคาถูกบ้างครับ? กำลังจะไปเชียงใหม่",
+    createdAt: "2024-01-18T09:15:00",
+    likes: 89,
+    comments: 67,
+    shares: 5,
+  },
+  {
+    id: "gp-3",
+    groupId: "2",
+    userId: "u3",
+    userName: "กินให้ชัวร์",
+    userAvatar: "https://i.pravatar.cc/150?u=user3",
+    content: "แนะนำร้านข้าวมันไก่เจ้าเด็ดที่สยามสแควร์ อร่อยมาก ราคาไม่แพง!",
+    images: ["https://images.unsplash.com/photo-1562967914-608f82629710?w=800"],
+    createdAt: "2024-01-18T12:45:00",
+    likes: 567,
+    comments: 123,
+    shares: 89,
+  },
+  {
+    id: "gp-4",
+    groupId: "2",
+    userId: "u4",
+    userName: "อาหารอร่อย",
+    userAvatar: "https://i.pravatar.cc/150?u=user4",
+    content: "สูตรผัดไทยแบบง่ายๆ ที่บ้าน ทำตามได้เลย!\n\n1. เตรียมเส้น\n2. ผัดกระเทียม\n3. ใส่เส้นและปรุงรส",
+    createdAt: "2024-01-18T11:20:00",
+    likes: 345,
+    comments: 78,
+    shares: 156,
+  },
+  {
+    id: "gp-5",
+    groupId: "3",
+    userId: "u5",
+    userName: "TechGuru",
+    userAvatar: "https://i.pravatar.cc/150?u=user5",
+    content: "React 19 ออกมาแล้ว! มี Server Components ใหม่ที่น่าสนใจมาก ใครลองแล้วบ้าง?",
+    createdAt: "2024-01-18T08:00:00",
+    likes: 456,
+    comments: 234,
+    shares: 67,
+  },
+];
+
+// Add posts to groups
+mockGroups.forEach((group) => {
+  group.posts = mockGroupPosts.filter((post) => post.groupId === group.id);
+});

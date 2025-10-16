@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   ThumbsUp,
   Heart,
@@ -50,7 +51,6 @@ export function PostCard({ post }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [showReactionPicker, setShowReactionPicker] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
 
   const userReaction = post.reactions.find((r) => r.userReacted);
 
@@ -122,7 +122,7 @@ export function PostCard({ post }: PostCardProps) {
           <PostActionsMenu
             postId={post.id}
             postUserId={post.userId}
-            onEdit={() => setIsEditing(true)}
+            onEdit={() => alert("แก้ไขโพสต์")}
             onDelete={() => {
               if (confirm("คุณต้องการลบโพสต์นี้หรือไม่?")) {
                 deletePost(post.id);
@@ -139,43 +139,47 @@ export function PostCard({ post }: PostCardProps) {
         </div>
 
         {/* Post Content */}
-        <div className="mt-4">
-          <p className="text-gray-900 dark:text-white whitespace-pre-wrap">
-            {post.content}
-          </p>
-        </div>
+        <Link href={`/post/${post.id}`}>
+          <div className="mt-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/30 rounded-lg p-2 -m-2 transition-colors">
+            <p className="text-gray-900 dark:text-white whitespace-pre-wrap">
+              {post.content}
+            </p>
+          </div>
+        </Link>
       </div>
 
       {/* Post Images */}
       {post.images && post.images.length > 0 && (
-        <div className={`grid ${
-          post.images.length === 1
-            ? "grid-cols-1"
-            : post.images.length === 2
-            ? "grid-cols-2"
-            : post.images.length === 3
-            ? "grid-cols-3"
-            : "grid-cols-2"
-        } gap-1`}>
-          {post.images.map((image, index) => (
-            <div
-              key={index}
-              className={`relative ${
-                post.images!.length === 3 && index === 0 ? "col-span-3" : ""
-              } ${
-                post.images!.length > 4 && index >= 3 ? "hidden" : ""
-              }`}
-              style={{ paddingBottom: post.images!.length === 1 ? "60%" : "100%" }}
-            >
-              <Image
-                src={image}
-                alt={`Post image ${index + 1}`}
-                fill
-                className="object-cover"
-              />
-            </div>
-          ))}
-        </div>
+        <Link href={`/post/${post.id}`}>
+          <div className={`grid cursor-pointer ${
+            post.images.length === 1
+              ? "grid-cols-1"
+              : post.images.length === 2
+              ? "grid-cols-2"
+              : post.images.length === 3
+              ? "grid-cols-3"
+              : "grid-cols-2"
+          } gap-1`}>
+            {post.images.map((image, index) => (
+              <div
+                key={index}
+                className={`relative ${
+                  post.images!.length === 3 && index === 0 ? "col-span-3" : ""
+                } ${
+                  post.images!.length > 4 && index >= 3 ? "hidden" : ""
+                }`}
+                style={{ paddingBottom: post.images!.length === 1 ? "60%" : "100%" }}
+              >
+                <Image
+                  src={image}
+                  alt={`Post image ${index + 1}`}
+                  fill
+                  className="object-cover hover:opacity-95 transition-opacity"
+                />
+              </div>
+            ))}
+          </div>
+        </Link>
       )}
 
       {/* Reaction Summary */}

@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -131,13 +132,13 @@ export function GroupsView({ initialViewModel }: GroupsViewProps) {
                 ⭐ กลุ่มของคุณ
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {state.viewModel.yourGroups.slice(0, 6).map((group) => (
-                  <div
+                {state.viewModel.yourGroups.map((group) => (
+                  <Link
                     key={group.id}
+                    href={`/groups/${group.id}`}
                     className="group cursor-pointer bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"
-                    onClick={() => actions.selectGroup(group)}
                   >
-                    <div className="relative h-32">
+                    <div className="relative h-48">
                       <Image
                         src={group.coverImage}
                         alt={group.name}
@@ -161,7 +162,7 @@ export function GroupsView({ initialViewModel }: GroupsViewProps) {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -267,10 +268,10 @@ export function GroupsView({ initialViewModel }: GroupsViewProps) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {state.filteredGroups.map((group) => (
-              <div
+              <Link
                 key={group.id}
+                href={`/groups/${group.id}`}
                 className="group cursor-pointer bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"
-                onClick={() => actions.selectGroup(group)}
               >
                 <div className="relative h-32">
                   <Image
@@ -325,7 +326,7 @@ export function GroupsView({ initialViewModel }: GroupsViewProps) {
                     </button>
                   )}
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
