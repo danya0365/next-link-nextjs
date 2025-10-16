@@ -543,13 +543,17 @@
 - [ ] Story reactions
 - [ ] Story replies
 
-### 15.2 Marketplace
+### 15.2 Marketplace ✅
 
-- [ ] List item for sale
-- [ ] Browse marketplace
-- [ ] Item categories
-- [ ] Search and filters
-- [ ] Message seller
+- [x] List item for sale ✅
+- [x] Browse marketplace ✅
+- [x] Item categories (11 categories) ✅
+- [x] Search and filters ✅
+- [x] Message seller (UI) ✅
+- [x] Follow CREATE_PAGE_PATTERN.md (MarketplacePresenter, useMarketplacePresenter) ✅
+- [x] Mock data สำหรับ 12 items ✅
+- [x] Item detail modal ✅
+- [x] Seller rating display ✅
 
 ### 15.3 Watch (Video Platform)
 
