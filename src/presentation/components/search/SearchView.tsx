@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { Search, Users, FileText, X } from "lucide-react";
-import { useAuthStore } from "@/src/presentation/stores/authStore";
-import { useSearchPresenter } from "@/src/presentation/presenters/search/useSearchPresenter";
 import { SearchViewModel } from "@/src/presentation/presenters/search/SearchPresenter";
+import { useSearchPresenter } from "@/src/presentation/presenters/search/useSearchPresenter";
+import { useAuthStore } from "@/src/presentation/stores/authStore";
+import { FileText, Search, Users, X } from "lucide-react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface SearchViewProps {
   initialViewModel?: SearchViewModel;
@@ -22,9 +22,7 @@ export function SearchView({ initialViewModel }: SearchViewProps) {
   const { isAuthenticated } = useAuthStore();
   const [state, actions] = useSearchPresenter(initialViewModel);
 
-  const [searchInput, setSearchInput] = useState(
-    searchParams.get("q") || ""
-  );
+  const [searchInput, setSearchInput] = useState(searchParams.get("q") || "");
 
   useEffect(() => {
     // Redirect to login if not authenticated
@@ -37,11 +35,12 @@ export function SearchView({ initialViewModel }: SearchViewProps) {
   // Perform search when URL param changes
   useEffect(() => {
     const query = searchParams.get("q");
+    console.log("Search params changed", query);
     if (query) {
       setSearchInput(query);
       actions.search(query);
     }
-  }, [searchParams, actions]);
+  }, [searchParams]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

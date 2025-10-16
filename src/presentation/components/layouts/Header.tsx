@@ -1,25 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useAuthStore } from "@/src/presentation/stores/authStore";
+import { useNotificationStore } from "@/src/presentation/stores/notificationStore";
+import { cn } from "@/src/utils/cn";
+import {
+  Bell,
+  Home,
+  LogOut,
+  Menu,
+  MessageCircle,
+  Moon,
+  Search,
+  Settings,
+  Sun,
+  UserCircle,
+  Users,
+  X,
+} from "lucide-react";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
-import {
-  Home,
-  Users,
-  MessageCircle,
-  Bell,
-  Search,
-  Menu,
-  X,
-  Sun,
-  Moon,
-  UserCircle,
-  Settings,
-  LogOut,
-} from "lucide-react";
-import { cn } from "@/src/utils/cn";
-import { useAuthStore } from "@/src/presentation/stores/authStore";
+import { useEffect, useState } from "react";
 
 /**
  * Header Component
@@ -27,12 +28,17 @@ import { useAuthStore } from "@/src/presentation/stores/authStore";
  */
 export function Header() {
   const router = useRouter();
+  const [isMounted, setIsMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const { theme, setTheme } = useTheme();
-  
+
   // Auth state from Zustand store
   const { user, isAuthenticated, logout } = useAuthStore();
+
+  // Notification state from Zustand store
+  const { unreadNotifications, unreadMessages } = useNotificationStore();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -52,6 +58,68 @@ export function Header() {
     router.push("/");
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+    }
+  };
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo & Brand */}
+            <div className="flex items-center space-x-4">
+              <div className="h-10 w-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+              <div className="h-6 w-32 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+            </div>
+
+            {/* Search Input */}
+            <form
+              onSubmit={handleSearch}
+              className="flex items-center space-x-2"
+            >
+              <div className="h-10 w-64 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+              <button
+                type="submit"
+                className="h-10 w-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-9-9m9 9l-9 9"
+                  />
+                </svg>
+              </button>
+            </form>
+
+            {/* Navigation */}
+            <nav className="flex items-center space-x-4">
+              <div className="h-10 w-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+              <div className="h-10 w-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+              <div className="h-10 w-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+            </nav>
+          </div>
+        </div>
+      </header>
+    );
+  }
+
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,14 +136,19 @@ export function Header() {
             </Link>
 
             {/* Search Bar - Desktop */}
-            <div className="hidden md:flex items-center bg-gray-100 dark:bg-gray-700 rounded-full px-4 py-2 w-64 lg:w-96">
+            <form
+              onSubmit={handleSearch}
+              className="hidden md:flex items-center bg-gray-100 dark:bg-gray-700 rounded-full px-4 py-2 w-64 lg:w-96"
+            >
               <Search className="w-5 h-5 text-gray-400" />
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="ค้นหา..."
                 className="bg-transparent border-none outline-none ml-2 text-gray-900 dark:text-white placeholder-gray-400 w-full"
               />
-            </div>
+            </form>
           </div>
 
           {/* Navigation Links - Desktop */}
@@ -110,8 +183,12 @@ export function Header() {
                 title="ข้อความ"
               >
                 <MessageCircle className="w-6 h-6" />
-                {/* Unread badge */}
-                <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+                {/* Unread messages badge */}
+                {unreadMessages > 0 && (
+                  <span className="absolute top-2 right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                    {unreadMessages > 9 ? "9+" : unreadMessages}
+                  </span>
+                )}
               </Link>
               <Link
                 href="/notifications"
@@ -123,9 +200,11 @@ export function Header() {
               >
                 <Bell className="w-6 h-6" />
                 {/* Notification badge */}
-                <span className="absolute top-2 right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
-                  5
-                </span>
+                {unreadNotifications > 0 && (
+                  <span className="absolute top-2 right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                    {unreadNotifications > 9 ? "9+" : unreadNotifications}
+                  </span>
+                )}
               </Link>
             </nav>
           )}
@@ -179,7 +258,7 @@ export function Header() {
                       <span>ตั้งค่า</span>
                     </Link>
                     <hr className="my-2 border-gray-200 dark:border-gray-700" />
-                    <button 
+                    <button
                       onClick={handleLogout}
                       className="flex items-center space-x-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 w-full"
                     >
@@ -222,14 +301,19 @@ export function Header() {
 
         {/* Mobile Search Bar */}
         <div className="md:hidden py-3">
-          <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-full px-4 py-2">
+          <form
+            onSubmit={handleSearch}
+            className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-full px-4 py-2"
+          >
             <Search className="w-5 h-5 text-gray-400" />
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="ค้นหา..."
               className="bg-transparent border-none outline-none ml-2 text-gray-900 dark:text-white placeholder-gray-400 w-full"
             />
-          </div>
+          </form>
         </div>
       </div>
 
@@ -288,7 +372,7 @@ export function Header() {
                   <span>ตั้งค่า</span>
                 </Link>
                 <hr className="my-2 border-gray-200 dark:border-gray-700" />
-                <button 
+                <button
                   onClick={handleLogout}
                   className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 w-full"
                 >

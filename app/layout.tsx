@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     shortcut: ["/favicon.ico"],
     apple: ["/favicon/apple-touch-icon.png"],
   },
-  manifest: "/site.webmanifest",
+  manifest: "/favicon/site.webmanifest",
   openGraph: {
     title: "Next Link - โซเชียลมีเดียเชื่อมต่อคนทั่วโลก",
     description:

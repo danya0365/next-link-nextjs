@@ -3,18 +3,26 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, CheckCircle, Star } from "lucide-react";
-import {
-  features,
-  statistics,
-  testimonials,
-  howItWorksSteps,
-} from "@/src/data/landing-master-data";
+import { useLandingPresenter } from "@/src/presentation/presenters/landing/useLandingPresenter";
+import { LandingViewModel } from "@/src/presentation/presenters/landing/LandingPresenter";
+
+interface LandingViewProps {
+  initialViewModel?: LandingViewModel;
+}
 
 /**
  * Landing Page View Component
  * หน้า Landing Page หลักของแอพพลิเคชั่น
  */
-export function LandingView() {
+export function LandingView({ initialViewModel }: LandingViewProps) {
+  const [state] = useLandingPresenter(initialViewModel);
+
+  // Use data from viewModel or fallback to empty arrays
+  const features = state.viewModel?.features || [];
+  const statistics = state.viewModel?.statistics || [];
+  const testimonials = state.viewModel?.testimonials || [];
+  const howItWorksSteps = state.viewModel?.howItWorksSteps || [];
+
   return (
     <div className="bg-white dark:bg-gray-900">
       {/* Hero Section */}
