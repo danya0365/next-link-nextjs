@@ -10,6 +10,7 @@ import {
   Menu,
   MessageCircle,
   Moon,
+  PlaySquare,
   Search,
   Settings,
   Sun,
@@ -175,6 +176,16 @@ export function Header() {
                 <Users className="w-6 h-6" />
               </Link>
               <Link
+                href="/watch"
+                className={cn(
+                  "p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors",
+                  "text-gray-700 dark:text-gray-300"
+                )}
+                title="Watch"
+              >
+                <PlaySquare className="w-6 h-6" />
+              </Link>
+              <Link
                 href="/messages"
                 className={cn(
                   "p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative",
@@ -338,6 +349,14 @@ export function Header() {
                 >
                   <Users className="w-6 h-6" />
                   <span>เพื่อน</span>
+                </Link>
+                <Link
+                  href="/watch"
+                  className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+                  onClick={toggleMobileMenu}
+                >
+                  <PlaySquare className="w-6 h-6" />
+                  <span>Watch</span>
                 </Link>
                 <Link
                   href="/messages"

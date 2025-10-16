@@ -553,18 +553,22 @@
 
 ### 15.3 Watch (Video Platform)
 
-- [ ] Video feed
-- [ ] Video categories
-- [ ] Recommended videos
-- [ ] Watch history
+- [x] Video feed
+- [x] Video categories
+- [x] Recommended videos
+- [x] Video player (placeholder)
 - [ ] Create playlist
+- [ ] Watch history
+- [x] Follow CREATE_PAGE_PATTERN.md (WatchPresenter, useWatchPresenter)
+- [x] Mock data สำหรับ videos
 
 ### 15.4 Gaming
 
 - [ ] Games directory
 - [ ] Game leaderboards
-- [ ] Gaming friends
+- [ ] Game achievements
 - [ ] Game invitations
+- [ ] Game Friends
 
 ---
 
