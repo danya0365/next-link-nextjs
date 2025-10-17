@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuthStore } from "@/src/presentation/stores/authStore";
-import { useFeedStore } from "@/src/presentation/stores/feedStore";
 import { useCallback, useEffect, useState } from "react";
 import { ProfilePresenterFactory, ProfileViewModel } from "./ProfilePresenter";
 
@@ -30,7 +29,6 @@ export function useProfilePresenter(
   initialViewModel?: ProfileViewModel
 ): [ProfilePresenterState, ProfilePresenterActions] {
   const { user: currentUser } = useAuthStore();
-  const { posts } = useFeedStore();
 
   const [viewModel, setViewModel] = useState<ProfileViewModel | null>(
     initialViewModel || null
@@ -51,8 +49,7 @@ export function useProfilePresenter(
     try {
       const newViewModel = await presenter.getViewModel(
         userId,
-        currentUser?.id,
-        posts
+        currentUser?.id
       );
       setViewModel(newViewModel);
     } catch (err) {
@@ -62,7 +59,7 @@ export function useProfilePresenter(
     } finally {
       setLoading(false);
     }
-  }, [userId, currentUser?.id, posts]);
+  }, [userId, currentUser?.id]);
 
   /**
    * Set active tab
@@ -84,7 +81,7 @@ export function useProfilePresenter(
   // Load data on mount or when userId/posts change
   useEffect(() => {
     loadData();
-  }, [userId, currentUser?.id, posts.length, loadData]);
+  }, [userId, currentUser?.id, loadData]);
 
   return [
     {
