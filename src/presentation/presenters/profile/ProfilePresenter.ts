@@ -1,4 +1,4 @@
-import { Post } from "@/src/data/mock-posts";
+import { mockPosts, Post } from "@/src/data/mock-posts";
 import {
   mockAboutData,
   mockFriendsData,
@@ -41,8 +41,7 @@ export class ProfilePresenter {
    */
   async getViewModel(
     userId: string,
-    currentUserId?: string,
-    posts?: Post[]
+    currentUserId?: string
   ): Promise<ProfileViewModel> {
     try {
       const profileUser = mockUsers.find((u) => u.id === userId);
@@ -51,13 +50,11 @@ export class ProfilePresenter {
         throw new Error("Profile not found");
       }
 
-      console.log("ProfilePresenter.getViewModel", userId, currentUserId);
-
       const isOwnProfile = currentUserId === userId;
       const aboutData = mockAboutData[userId] || {};
       const photos = mockPhotosData[userId] || [];
       const friends = mockFriendsData[userId] || [];
-      const userPosts = posts?.filter((post) => post.userId === userId) || [];
+      const userPosts = mockPosts.filter((post) => post.userId === userId);
 
       return {
         profileUser,

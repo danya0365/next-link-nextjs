@@ -9,12 +9,14 @@ export interface ProfileAbout {
     position: string;
     startDate: string;
     endDate?: string;
+    description?: string;
   }[];
   education?: {
     school: string;
     degree?: string;
     field?: string;
     graduationYear?: string;
+    description?: string;
   }[];
   placesLived?: {
     city: string;
@@ -24,6 +26,10 @@ export interface ProfileAbout {
     phone?: string;
     email?: string;
     website?: string;
+    socialLinks?: {
+      platform: string;
+      url: string;
+    }[];
   };
   basicInfo?: {
     birthday?: string;
@@ -34,6 +40,7 @@ export interface ProfileAbout {
 
 export interface ProfilePhoto {
   id: string;
+  caption?: string;
   url: string;
   createdAt: string;
 }
