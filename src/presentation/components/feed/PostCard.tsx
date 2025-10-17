@@ -1,38 +1,54 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import { Post, PostReaction } from "@/src/data/mock-posts";
+import { useAuthStore } from "@/src/presentation/stores/authStore";
+import { useFeedStore } from "@/src/presentation/stores/feedStore";
+import { formatDistanceToNow } from "@/src/utils/date-helpers";
 import {
-  ThumbsUp,
-  Heart,
-  Laugh,
-  Frown,
-  Angry,
+  Globe,
+  Lock,
+  MapPin,
   MessageCircle,
   Share2,
-  MapPin,
-  Globe,
   Users,
-  Lock,
 } from "lucide-react";
-import { Post, PostReaction } from "@/src/data/mock-posts";
-import { useFeedStore } from "@/src/presentation/stores/feedStore";
-import { useAuthStore } from "@/src/presentation/stores/authStore";
-import { formatDistanceToNow } from "@/src/utils/date-helpers";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 import { PostActionsMenu } from "./PostActionsMenu";
 
 interface PostCardProps {
   post: Post;
 }
 
-const reactionIcons: Record<PostReaction["type"], { icon: React.ReactNode; color: string }> = {
-  like: { icon: <ThumbsUp className="w-4 h-4" />, color: "text-blue-600" },
-  love: { icon: <Heart className="w-4 h-4" />, color: "text-red-600" },
-  haha: { icon: <Laugh className="w-4 h-4" />, color: "text-yellow-600" },
-  wow: { icon: <div className="w-4 h-4 flex items-center justify-center font-bold text-yellow-600">😲</div>, color: "text-yellow-600" },
-  sad: { icon: <Frown className="w-4 h-4" />, color: "text-yellow-600" },
-  angry: { icon: <Angry className="w-4 h-4" />, color: "text-orange-600" },
+const reactionIcons: Record<
+  PostReaction["type"],
+  { icon: React.ReactNode; color: string }
+> = {
+  like: {
+    icon: <div className="w-4 h-4 flex items-center justify-center">👍</div>,
+    color: "text-blue-600",
+  },
+  love: {
+    icon: <div className="w-4 h-4 flex items-center justify-center">❤️</div>,
+    color: "text-red-600",
+  },
+  haha: {
+    icon: <div className="w-4 h-4 flex items-center justify-center">😂</div>,
+    color: "text-yellow-600",
+  },
+  wow: {
+    icon: <div className="w-4 h-4 flex items-center justify-center">😲</div>,
+    color: "text-yellow-600",
+  },
+  sad: {
+    icon: <div className="w-4 h-4 flex items-center justify-center">😢</div>,
+    color: "text-yellow-600",
+  },
+  angry: {
+    icon: <div className="w-4 h-4 flex items-center justify-center">😠</div>,
+    color: "text-orange-600",
+  },
 };
 
 const privacyIcons = {
@@ -47,7 +63,8 @@ const privacyIcons = {
  */
 export function PostCard({ post }: PostCardProps) {
   const { user } = useAuthStore();
-  const { reactToPost, addComment, sharePost, deletePost, hidePost, savePost } = useFeedStore();
+  const { reactToPost, addComment, sharePost, deletePost, hidePost, savePost } =
+    useFeedStore();
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [showReactionPicker, setShowReactionPicker] = useState(false);
@@ -151,24 +168,26 @@ export function PostCard({ post }: PostCardProps) {
       {/* Post Images */}
       {post.images && post.images.length > 0 && (
         <Link href={`/post/${post.id}`}>
-          <div className={`grid cursor-pointer ${
-            post.images.length === 1
-              ? "grid-cols-1"
-              : post.images.length === 2
-              ? "grid-cols-2"
-              : post.images.length === 3
-              ? "grid-cols-3"
-              : "grid-cols-2"
-          } gap-1`}>
+          <div
+            className={`grid cursor-pointer ${
+              post.images.length === 1
+                ? "grid-cols-1"
+                : post.images.length === 2
+                ? "grid-cols-2"
+                : post.images.length === 3
+                ? "grid-cols-3"
+                : "grid-cols-2"
+            } gap-1`}
+          >
             {post.images.map((image, index) => (
               <div
                 key={index}
                 className={`relative ${
                   post.images!.length === 3 && index === 0 ? "col-span-3" : ""
-                } ${
-                  post.images!.length > 4 && index >= 3 ? "hidden" : ""
-                }`}
-                style={{ paddingBottom: post.images!.length === 1 ? "60%" : "100%" }}
+                } ${post.images!.length > 4 && index >= 3 ? "hidden" : ""}`}
+                style={{
+                  paddingBottom: post.images!.length === 1 ? "60%" : "100%",
+                }}
               >
                 <Image
                   src={image}
@@ -190,7 +209,9 @@ export function PostCard({ post }: PostCardProps) {
               {post.reactions.slice(0, 3).map((reaction) => (
                 <div
                   key={reaction.type}
-                  className={`w-5 h-5 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center ${reactionIcons[reaction.type].color}`}
+                  className={`w-5 h-5 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center ${
+                    reactionIcons[reaction.type].color
+                  }`}
                 >
                   {reactionIcons[reaction.type].icon}
                 </div>
@@ -224,7 +245,9 @@ export function PostCard({ post }: PostCardProps) {
               onMouseLeave={() => setShowReactionPicker(false)}
               onClick={() => handleReact("like")}
               className={`flex-1 w-full flex items-center justify-center space-x-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors ${
-                userReaction ? reactionIcons[userReaction.type].color : "text-gray-600 dark:text-gray-400"
+                userReaction
+                  ? reactionIcons[userReaction.type].color
+                  : "text-gray-600 dark:text-gray-400"
               }`}
             >
               {userReaction ? (
@@ -236,7 +259,9 @@ export function PostCard({ post }: PostCardProps) {
                 </>
               ) : (
                 <>
-                  <ThumbsUp className="w-5 h-5" />
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    👍
+                  </div>
                   <span className="text-sm font-medium">ถูกใจ</span>
                 </>
               )}
@@ -249,15 +274,17 @@ export function PostCard({ post }: PostCardProps) {
                 onMouseLeave={() => setShowReactionPicker(false)}
                 className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-white dark:bg-gray-700 rounded-full shadow-lg border border-gray-200 dark:border-gray-600 p-2 flex space-x-2"
               >
-                {(Object.keys(reactionIcons) as PostReaction["type"][]).map((type) => (
-                  <button
-                    key={type}
-                    onClick={() => handleReact(type)}
-                    className={`p-2 hover:scale-125 transition-transform ${reactionIcons[type].color}`}
-                  >
-                    {reactionIcons[type].icon}
-                  </button>
-                ))}
+                {(Object.keys(reactionIcons) as PostReaction["type"][]).map(
+                  (type) => (
+                    <button
+                      key={type}
+                      onClick={() => handleReact(type)}
+                      className={`p-2 hover:scale-125 transition-transform ${reactionIcons[type].color}`}
+                    >
+                      {reactionIcons[type].icon}
+                    </button>
+                  )
+                )}
               </div>
             )}
           </div>
@@ -306,11 +333,17 @@ export function PostCard({ post }: PostCardProps) {
                     </div>
                     <div className="flex items-center space-x-4 mt-1 ml-4 text-xs text-gray-500 dark:text-gray-400">
                       <span>{formatDistanceToNow(comment.createdAt)}</span>
-                      <button className="hover:underline font-medium">ถูกใจ</button>
-                      <button className="hover:underline font-medium">ตอบกลับ</button>
+                      <button className="hover:underline font-medium">
+                        ถูกใจ
+                      </button>
+                      <button className="hover:underline font-medium">
+                        ตอบกลับ
+                      </button>
                       {comment.likes > 0 && (
                         <span className="flex items-center space-x-1">
-                          <ThumbsUp className="w-3 h-3 text-blue-600" />
+                          <div className="w-3 h-3 flex items-center justify-center">
+                            👍
+                          </div>
                           <span>{comment.likes}</span>
                         </span>
                       )}
