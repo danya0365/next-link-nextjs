@@ -1,15 +1,16 @@
 import { MainLayout } from "@/src/presentation/components/layouts/MainLayout";
 import {
-  HelpCircle,
-  Search,
-  MessageCircle,
-  Shield,
-  Settings,
-  Users,
   FileText,
+  HelpCircle,
   Mail,
+  MessageCircle,
+  Search,
+  Settings,
+  Shield,
+  Users,
 } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "ศูนย์ช่วยเหลือ | Next Link",
@@ -32,7 +33,7 @@ export default function HelpPage() {
         },
         {
           q: "จะแก้ไขข้อมูลโปรไฟล์ได้อย่างไร?",
-          a: "ไปที่โปรไฟล์ของคุณ แล้วคลิกปุ่ม \"แก้ไขโปรไฟล์\" เพื่อปรับเปลี่ยนข้อมูล",
+          a: 'ไปที่โปรไฟล์ของคุณ แล้วคลิกปุ่ม "แก้ไขโปรไฟล์" เพื่อปรับเปลี่ยนข้อมูล',
         },
         {
           q: "จะลบบัญชีได้อย่างไร?",
@@ -98,7 +99,7 @@ export default function HelpPage() {
         },
         {
           q: "จะเปิด Dark Mode ได้อย่างไร?",
-          a: 'คลิกไอคอนดวงจันทร์/ดวงอาทิตย์ที่มุมบนขวาเพื่อสลับโหมด',
+          a: "คลิกไอคอนดวงจันทร์/ดวงอาทิตย์ที่มุมบนขวาเพื่อสลับโหมด",
         },
         {
           q: "จะเชื่อมต่อบัญชี Social Media อื่นได้อย่างไร?",
@@ -179,26 +180,26 @@ export default function HelpPage() {
               ทีมสนับสนุนของเรายินดีให้ความช่วยเหลือคุณตลอด 24/7
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
+              <Link
                 href="mailto:support@nextlink.com"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-purple-600 rounded-xl font-semibold hover:bg-gray-100 transition-colors"
               >
                 <Mail className="w-5 h-5" />
                 <span>ส่งอีเมลถึงเรา</span>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/messages"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/20 backdrop-blur-sm text-white rounded-xl font-semibold hover:bg-white/30 transition-colors"
               >
                 <MessageCircle className="w-5 h-5" />
                 <span>แชทกับเรา</span>
-              </a>
+              </Link>
             </div>
           </div>
 
           {/* Additional Resources */}
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <a
+            <Link
               href="/privacy"
               className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow border border-gray-200 dark:border-gray-700"
             >
@@ -209,9 +210,9 @@ export default function HelpPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 เรียนรู้เกี่ยวกับการเก็บรักษาและใช้ข้อมูลของคุณ
               </p>
-            </a>
+            </Link>
 
-            <a
+            <Link
               href="/terms"
               className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow border border-gray-200 dark:border-gray-700"
             >
@@ -222,7 +223,7 @@ export default function HelpPage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 อ่านข้อกำหนดการใช้บริการของเรา
               </p>
-            </a>
+            </Link>
 
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700">
               <Users className="w-10 h-10 text-purple-600 dark:text-purple-400 mb-4" />
