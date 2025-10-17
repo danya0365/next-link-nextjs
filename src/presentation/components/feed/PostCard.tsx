@@ -69,6 +69,7 @@ export function PostCard({ post }: PostCardProps) {
   const [commentText, setCommentText] = useState("");
   const [showReactionPicker, setShowReactionPicker] = useState(false);
   const reactionPickerRef = useRef<HTMLDivElement | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (!showReactionPicker) return;
@@ -93,6 +94,33 @@ export function PostCard({ post }: PostCardProps) {
   const handleReact = (type: PostReaction["type"]) => {
     reactToPost(post.id, type);
     setShowReactionPicker(false);
+  };
+
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index);
+  };
+
+  const closeLightbox = () => {
+    setLightboxIndex(null);
+  };
+
+  const showPrevImage = () => {
+    if (!post.images || lightboxIndex === null) return;
+    setLightboxIndex((prevIndex) => {
+      if (prevIndex === null) return prevIndex;
+      const newIndex =
+        (prevIndex - 1 + post.images!.length) % post.images!.length;
+      return newIndex;
+    });
+  };
+
+  const showNextImage = () => {
+    if (!post.images || lightboxIndex === null) return;
+    setLightboxIndex((prevIndex) => {
+      if (prevIndex === null) return prevIndex;
+      const newIndex = (prevIndex + 1) % post.images!.length;
+      return newIndex;
+    });
   };
 
   const handleComment = () => {
@@ -186,38 +214,38 @@ export function PostCard({ post }: PostCardProps) {
 
       {/* Post Images */}
       {post.images && post.images.length > 0 && (
-        <Link href={`/post/${post.id}`}>
-          <div
-            className={`grid cursor-pointer ${
-              post.images.length === 1
-                ? "grid-cols-1"
-                : post.images.length === 2
-                ? "grid-cols-2"
-                : post.images.length === 3
-                ? "grid-cols-3"
-                : "grid-cols-2"
-            } gap-1`}
-          >
-            {post.images.map((image, index) => (
-              <div
-                key={index}
-                className={`relative ${
-                  post.images!.length === 3 && index === 0 ? "col-span-3" : ""
-                } ${post.images!.length > 4 && index >= 3 ? "hidden" : ""}`}
-                style={{
-                  paddingBottom: post.images!.length === 1 ? "60%" : "100%",
-                }}
-              >
-                <Image
-                  src={image}
-                  alt={`Post image ${index + 1}`}
-                  fill
-                  className="object-cover hover:opacity-95 transition-opacity"
-                />
-              </div>
-            ))}
-          </div>
-        </Link>
+        <div
+          className={`grid cursor-pointer ${
+            post.images.length === 1
+              ? "grid-cols-1"
+              : post.images.length === 2
+              ? "grid-cols-2"
+              : post.images.length === 3
+              ? "grid-cols-3"
+              : "grid-cols-2"
+          } gap-1`}
+        >
+          {post.images.map((image, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={() => openLightbox(index)}
+              className={`relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                post.images!.length === 3 && index === 0 ? "col-span-3" : ""
+              } ${post.images!.length > 4 && index >= 3 ? "hidden" : ""}`}
+              style={{
+                paddingBottom: post.images!.length === 1 ? "60%" : "100%",
+              }}
+            >
+              <Image
+                src={image}
+                alt={`Post image ${index + 1}`}
+                fill
+                className="object-cover hover:opacity-95 transition-opacity"
+              />
+            </button>
+          ))}
+        </div>
       )}
 
       {/* Reaction Summary */}
@@ -402,6 +430,56 @@ export function PostCard({ post }: PostCardProps) {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Lightbox */}
+      {post.images && lightboxIndex !== null && post.images[lightboxIndex] && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+          onClick={closeLightbox}
+        >
+          <div
+            className="relative z-10 max-w-4xl w-full px-6"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+              <Image
+                src={post.images[lightboxIndex]}
+                alt={`Post image ${lightboxIndex + 1}`}
+                fill
+                className="object-contain"
+                sizes="(max-width: 1024px) 90vw, 60vw"
+              />
+            </div>
+            {post.images.length > 1 && (
+              <div className="absolute inset-y-1/2 left-0 right-0 flex items-center justify-between px-4 -translate-y-1/2">
+                <button
+                  type="button"
+                  onClick={showPrevImage}
+                  className="bg-gray-900/70 text-white px-3 py-2 rounded-full hover:bg-gray-900/90"
+                  aria-label="Previous image"
+                >
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  onClick={showNextImage}
+                  className="bg-gray-900/70 text-white px-3 py-2 rounded-full hover:bg-gray-900/90"
+                  aria-label="Next image"
+                >
+                  ›
+                </button>
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={closeLightbox}
+              className="absolute top-4 right-8 bg-gray-900/70 text-white px-4 py-2 rounded-full hover:bg-gray-900/90"
+            >
+              ปิด
+            </button>
+          </div>
         </div>
       )}
     </div>
