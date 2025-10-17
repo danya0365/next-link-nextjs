@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PostActionsMenu } from "./PostActionsMenu";
 
 interface PostCardProps {
@@ -68,6 +68,25 @@ export function PostCard({ post }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [showReactionPicker, setShowReactionPicker] = useState(false);
+  const reactionPickerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!showReactionPicker) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        reactionPickerRef.current &&
+        !reactionPickerRef.current.contains(event.target as Node)
+      ) {
+        setShowReactionPicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showReactionPicker]);
 
   const userReaction = post.reactions.find((r) => r.userReacted);
 
@@ -239,11 +258,13 @@ export function PostCard({ post }: PostCardProps) {
       <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-2">
         <div className="flex items-center justify-around">
           {/* Like Button with Reaction Picker */}
-          <div className="relative flex-1">
+          <div ref={reactionPickerRef} className="relative flex-1">
             <button
               onMouseEnter={() => setShowReactionPicker(true)}
-              onMouseLeave={() => setShowReactionPicker(false)}
-              onClick={() => handleReact("like")}
+              onClick={(event) => {
+                event.preventDefault();
+                setShowReactionPicker((prev) => !prev);
+              }}
               className={`flex-1 w-full flex items-center justify-center space-x-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors ${
                 userReaction
                   ? reactionIcons[userReaction.type].color
@@ -270,8 +291,6 @@ export function PostCard({ post }: PostCardProps) {
             {/* Reaction Picker */}
             {showReactionPicker && (
               <div
-                onMouseEnter={() => setShowReactionPicker(true)}
-                onMouseLeave={() => setShowReactionPicker(false)}
                 className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-white dark:bg-gray-700 rounded-full shadow-lg border border-gray-200 dark:border-gray-600 p-2 flex space-x-2"
               >
                 {(Object.keys(reactionIcons) as PostReaction["type"][]).map(
